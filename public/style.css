@@ -497,3 +497,11 @@ body {
 /* liens du pied de page */
 .foot__note a { color: var(--muted); text-decoration: underline; text-underline-offset: 2px; }
 .foot__note a:hover { color: var(--gold-soft); }
+
+/* section « Votre hawl » entièrement centrée (comme le haut de page) */
+.hawl { text-align: center; }
+.hawl__lede, .hawl__note { max-width: none; margin-left: auto; margin-right: auto; }
+.hawl__dates { flex-direction: column; align-items: center; gap: 4px; }
+.hawl__dates .date-sep { display: none; }
+.hawl__actions { justify-content: center; }
+.hawl__actions .btn { text-align: center; align-items: center; }
