@@ -453,3 +453,47 @@ body {
 /* deux panneaux de graphique empilés */
 .chart svg + svg { margin-top: 6px; }
 .chart-title { fill: var(--ink); font-family: var(--serif); font-size: 15px; }
+
+/* ===== Ajustements demandés ============================================= */
+
+/* dates empilées et centrées */
+.dates { flex-direction: column; gap: 4px; }
+.dates .date-sep { display: none; }
+
+/* paragraphes d'intro : occuper la largeur pour équilibrer les marges */
+.threshold-note, .section-lede, .calc__note, .disclaimer { max-width: none; }
+
+/* unité discrète dans les libellés */
+.field__u { color: var(--muted); font-weight: 400; font-size: 13px; }
+
+/* sélecteur or / argent */
+.calc__basis {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 14px;
+  margin-top: 18px;
+}
+.calc__basis-label { font-size: 14px; color: var(--muted); }
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 14px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 14.5px;
+  transition: border-color 0.18s ease, background 0.18s ease;
+}
+.chip em { font-style: normal; font-size: 12px; color: var(--muted); }
+.chip input { accent-color: var(--gold-soft); margin: 0; }
+.chip:has(input:checked) {
+  border-color: rgba(226, 192, 96, 0.5);
+  background: rgba(226, 192, 96, 0.08);
+}
+.chip:has(input:checked) em { color: var(--gold-soft); }
+
+/* liens du pied de page */
+.foot__note a { color: var(--muted); text-decoration: underline; text-underline-offset: 2px; }
+.foot__note a:hover { color: var(--gold-soft); }

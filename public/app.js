@@ -66,15 +66,15 @@ function ymdBasic(date) {
   const d = String(date.getUTCDate()).padStart(2, '0');
   return `${y}${m}${d}`;
 }
-const EVENT_TITLE = 'Échéance du hawl : vérifier la Zakât';
+const EVENT_TITLE = 'Échéance du hawl : vérifier la Zakāt';
 function eventDetails(hawl, data) {
   const today = todayAnchor();
   let s =
     'Une année lunaire complète s\'est écoulée. ' +
-    'Vérifiez si vous atteignez toujours le nisâb et calculez votre Zakât.\n\n';
+    'Vérifiez si vous atteignez toujours le nisāb et calculez votre Zakāt.\n\n';
   if (data) {
     s +=
-      `Nisâb de référence (relevé le ${formatGreg(today)} / ${formatHijri(today)}) :\n` +
+      `Nisāb de référence (relevé le ${formatGreg(today)} / ${formatHijri(today)}) :\n` +
       `• Or (85 g) : ${eur.format(data.gold.nisab)}\n` +
       `• Argent (595 g) : ${eur.format(data.silver.nisab)}\n\n`;
   }
@@ -100,7 +100,7 @@ function icsContent(hawl, data) {
     'BEGIN:VEVENT', `UID:hawl-${start}@nissab-du-jour`, `DTSTAMP:${stamp}`,
     `DTSTART;VALUE=DATE:${start}`, `DTEND;VALUE=DATE:${end}`,
     `SUMMARY:${esc(EVENT_TITLE)}`, `DESCRIPTION:${esc(eventDetails(hawl, data))}`,
-    'BEGIN:VALARM', 'ACTION:DISPLAY', 'DESCRIPTION:Hawl dans 3 jours — préparez votre Zakât', 'TRIGGER:-P3D', 'END:VALARM',
+    'BEGIN:VALARM', 'ACTION:DISPLAY', 'DESCRIPTION:Hawl dans 3 jours — préparez votre Zakāt', 'TRIGGER:-P3D', 'END:VALARM',
     'END:VEVENT', 'END:VCALENDAR',
   ].join('\r\n');
 }
@@ -126,7 +126,7 @@ function renderDates() {
   buildCalendar(HAWL, null);
 }
 
-// ============================================================ Nisâb du jour
+// Nisāb du jour
 function renderNisab(data) {
   NISAB_DATA = data;
   document.getElementById('goldNisab').textContent = eur.format(data.gold.nisab);
@@ -156,11 +156,16 @@ function showNisabError() {
   a.textContent = 'Les cours sont momentanément indisponibles. Réessayez dans quelques instants.';
 }
 
-// ============================================================ Calculateur (mālikī)
+// ============================================================ Calculateur (malikite)
 function num(id) {
   const v = parseFloat(document.getElementById(id).value);
   return isFinite(v) && v > 0 ? v : 0;
 }
+function selectedBasis() {
+  const el = document.querySelector('input[name="basis"]:checked');
+  return el ? el.value : 'argent';
+}
+
 function computeZakat() {
   const result = document.getElementById('calcResult');
   const especes = num('cEspeces');
@@ -169,47 +174,51 @@ function computeZakat() {
   const commerce = num('cCommerce');
   const dettes = num('cDettes');
 
-  const goldPerGram = NISAB_DATA ? NISAB_DATA.gold.perGram : 0;
-  const silverPerGram = NISAB_DATA ? NISAB_DATA.silver.perGram : 0;
-  const valeurOr = orG * goldPerGram;
-  const valeurArgent = argentG * silverPerGram;
-
-  const brut = especes + valeurOr + valeurArgent + commerce;
-  const base = brut - dettes;
-
   const totalSaisi = especes + orG + argentG + commerce + dettes;
   if (totalSaisi <= 0) {
     result.className = 'calc__result';
     result.innerHTML = '<p class="calc__hint">Renseignez vos montants pour voir l\'estimation.</p>';
     return;
   }
-
-  const seuil = NISAB_DATA ? NISAB_DATA.silver.nisab : null;
-  const seuilOr = NISAB_DATA ? NISAB_DATA.gold.nisab : null;
-  const atteint = seuil != null && base >= seuil;
-
-  let html = '';
-  html += `<div class="calc__line"><span>Base imposable</span><strong>${eur.format(Math.max(0, base))}</strong></div>`;
-  if (seuil != null) {
-    html += `<div class="calc__line"><span>Seuil retenu (argent, 595 g)</span><strong>${eur.format(seuil)}</strong></div>`;
-    html += `<div class="calc__line"><span>Pour mémoire, seuil de l'or (85 g)</span><span>${eur.format(seuilOr)}</span></div>`;
-  } else {
-    html += '<div class="calc__line"><span>Seuil (nisâb)</span><span>en attente des cours…</span></div>';
-  }
-
-  if (seuil == null) {
+  if (!NISAB_DATA) {
     result.className = 'calc__result';
-    result.innerHTML = html + '<p class="calc__verdict">Le seuil s\'affichera dès que les cours du jour seront chargés.</p>';
+    result.innerHTML = '<p class="calc__hint">En attente des cours du jour…</p>';
     return;
   }
 
+  const goldNisab = NISAB_DATA.gold.nisab;
+  const silverNisab = NISAB_DATA.silver.nisab;
+  const valeurOr = orG * NISAB_DATA.gold.perGram;
+  const valeurArgent = argentG * NISAB_DATA.silver.perGram;
+  const monnaieNette = especes + commerce - dettes; // peut être négatif
+
+  const basis = selectedBasis();
+  const seuilMonnaie = basis === 'or' ? goldNisab : silverNisab;
+  const libelleSeuil = basis === 'or' ? 'Or · 85 g' : 'Argent · 595 g';
+
+  // Cumul par parts (ḍamm) : chaque avoir compté en fraction de son nisāb.
+  // L'or physique contre le nisāb de l'or, l'argent physique contre celui de
+  // l'argent, la monnaie contre le nisāb choisi.
+  const fraction =
+    valeurOr / goldNisab +
+    valeurArgent / silverNisab +
+    monnaieNette / seuilMonnaie;
+
+  const totalNet = valeurOr + valeurArgent + monnaieNette;
+  const atteint = fraction >= 1 && totalNet > 0;
+
+  let html = '';
+  html += `<div class="calc__line"><span>Total zakatable</span><strong>${eur.format(Math.max(0, totalNet))}</strong></div>`;
+  html += `<div class="calc__line"><span>Seuil pour la monnaie</span><strong>${libelleSeuil} · ${eur.format(seuilMonnaie)}</strong></div>`;
+  html += `<div class="calc__line"><span>Équivalent cumulé</span><span>${fraction.toFixed(2).replace('.', ',')} × nisāb</span></div>`;
+
   if (atteint) {
-    const zakat = base * 0.025;
-    html += '<p class="calc__verdict">Vous atteignez le nisâb. Zakât due, soit 2,5 % :</p>';
+    const zakat = totalNet * 0.025;
+    html += '<p class="calc__verdict">Vous atteignez le nisāb. Zakāt due, soit 2,5 % :</p>';
     html += `<p class="calc__zakat">${eur.format(zakat)}</p>`;
     result.className = 'calc__result is-above';
   } else {
-    html += '<p class="calc__verdict">En dessous du nisâb : pas de Zakât due aujourd\'hui, sous réserve des conditions du hawl.</p>';
+    html += '<p class="calc__verdict">En dessous du nisāb : pas de Zakāt due aujourd\'hui, sous réserve des conditions du hawl.</p>';
     result.className = 'calc__result is-below';
   }
   result.innerHTML = html;
@@ -236,7 +245,7 @@ function metalPanel(title, values, points, lineClass, dotClass, showDates) {
   const x = (i) => padL + (points.length === 1 ? innerW / 2 : (i / (points.length - 1)) * innerW);
   const y = (v) => padT + innerH - ((v - min) / (max - min)) * innerH;
 
-  let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Évolution du nisâb ${title}">`;
+  let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Évolution du nisāb ${title}">`;
   s += `<text class="chart-title" x="0" y="15">${title}</text>`;
 
   for (let t = 0; t <= 3; t++) {
@@ -298,6 +307,9 @@ async function init() {
   // calculateur en direct
   ['cEspeces', 'cOrG', 'cArgentG', 'cCommerce', 'cDettes'].forEach((id) => {
     document.getElementById(id).addEventListener('input', computeZakat);
+  });
+  document.querySelectorAll('input[name="basis"]').forEach((r) => {
+    r.addEventListener('change', computeZakat);
   });
 
   loadHistory();
