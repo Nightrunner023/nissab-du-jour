@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Nissab du Jour — or et argent en euros</title>
-  <meta name="description" content="Le montant du nissāb du jour en or (85 g) et en argent (595 g), en euros, avec les dates hégirienne et grégorienne, un calculateur de Zakāt (école malikite) et un rappel pour le hawl." />
+  <meta name="description" content="Le montant du nisāb du jour en or (85 g) et en argent (595 g), en euros, avec les dates hégirienne et grégorienne, un calculateur de Zakāt (école malikite) et un rappel pour le hawl." />
   <meta name="theme-color" content="#0c151b" />
 
   <!-- Partage (Open Graph / Twitter) -->
@@ -13,13 +13,13 @@
   <meta property="og:locale" content="fr_FR" />
   <meta property="og:url" content="https://nissabdujour.fr/" />
   <meta property="og:title" content="Nissab du Jour — or et argent en euros" />
-  <meta property="og:description" content="Le nissāb du jour en or et en argent, un calculateur de Zakāt (école malikite) et un rappel pour le hawl." />
+  <meta property="og:description" content="Le nisāb du jour en or et en argent, un calculateur de Zakāt malikite et un rappel pour le hawl." />
   <meta property="og:image" content="https://nissabdujour.fr/og-image.png" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Nissab du Jour" />
-  <meta name="twitter:description" content="Le nissāb du jour en or et en argent, un calculateur de Zakāt (école malikite) et un rappel pour le hawl." />
+  <meta name="twitter:description" content="Le nisāb du jour en or et en argent, un calculateur de Zakāt malikite et un rappel pour le hawl." />
   <meta name="twitter:image" content="https://nissabdujour.fr/og-image.png" />
 
   <!-- Icônes / PWA -->
@@ -49,7 +49,7 @@
         <div class="metal__sheen" aria-hidden="true"></div>
         <header class="metal__head">
           <h2 class="metal__name">Or</h2>
-          <p class="metal__caption">Nissāb · 85 g</p>
+          <p class="metal__caption">Nisāb · 85 g</p>
         </header>
         <p class="metal__amount" id="goldNisab">—</p>
         <p class="metal__detail" id="goldDetail">&nbsp;</p>
@@ -59,7 +59,7 @@
         <div class="metal__sheen" aria-hidden="true"></div>
         <header class="metal__head">
           <h2 class="metal__name">Argent</h2>
-          <p class="metal__caption">Nissāb · 595 g</p>
+          <p class="metal__caption">Nisāb · 595 g</p>
         </header>
         <p class="metal__amount" id="silverNisab">—</p>
         <p class="metal__detail" id="silverDetail">&nbsp;</p>
@@ -69,8 +69,8 @@
     <p class="alert" id="alert" hidden></p>
 
     <p class="threshold-note">
-      Le nissāb est le seuil de richesse à partir duquel la Zakāt devient due.
-      Des savants de l'école malikite préconise le seuil de l'<strong>argent</strong>,
+      Le nisāb est le seuil de richesse à partir duquel la Zakāt devient due.
+      Par défaut, l'école malikite retient le seuil de l'<strong>argent</strong>,
       plus bas et plus favorable aux pauvres, mais vous pouvez choisir celui de
       l'or dans le calculateur. <a href="#methodo">En savoir plus</a>
     </p>
@@ -149,8 +149,8 @@
       <p class="calc__note">
         Sont exclus, selon l'école malikite : les bijoux d'usage personnel, la
         résidence, la voiture, les outils de travail. La Zakāt suppose la
-        possession du nissāb au terme d'une année lunaire. L'or, l'argent et la
-        monnaie se cumulent par parts (le ḍamm) pour compléter un nissāb. Pour les
+        possession du nisāb au terme d'une année lunaire. L'or, l'argent et la
+        monnaie se cumulent par parts (le ḍamm) pour compléter un nisāb. Pour les
         salaires, les créances ou une activité commerciale, voyez la méthode
         détaillée plus bas et consultez un savant pour votre cas.
       </p>
@@ -158,7 +158,7 @@
 
     <!-- Historique -->
     <section class="history" id="history" aria-label="Historique du nisāb">
-      <h2 class="section-title">Évolution du nissāb</h2>
+      <h2 class="section-title">Évolution du nisāb</h2>
       <p class="section-lede" id="histLede">Sur les derniers jours.</p>
       <div class="chart" id="chart"></div>
     </section>
@@ -167,7 +167,7 @@
     <section class="hawl" aria-label="Échéance du hawl">
       <h2 class="section-title">Votre hawl</h2>
       <p class="hawl__lede">
-        Si vous déteniez aujourd'hui de quoi atteindre le nissāb, votre hawl,
+        Si vous déteniez aujourd'hui de quoi atteindre le nisāb, votre hawl,
         l'échéance d'une année lunaire complète, arriverait le&nbsp;:
       </p>
       <div class="hawl__dates">
@@ -178,11 +178,18 @@
       <div class="hawl__actions">
         <a class="btn btn--primary" id="btnIcs" href="#" download="hawl.ics">
           Ajouter à mon agenda
-          <span class="btn__sub">fichier .ics</span>
+          <span class="btn__sub">.ics · rappel 3 jours avant inclus</span>
+        </a>
+        <a class="btn" id="btnGoogle" href="#" target="_blank" rel="noopener">
+          Google Agenda
+          <span class="btn__sub">évènement prérempli</span>
         </a>
       </div>
       <p class="hawl__note">
-        Sur téléphone, préférez le bouton « Ajouter à mon agenda » (fichier .ics)
+        Sur téléphone, préférez le bouton « Ajouter à mon agenda » (.ics)&nbsp;:
+        le rappel trois jours avant y est garanti, sur Apple Calendrier, Outlook
+        comme dans Google Agenda. Le bouton Google ouvre un évènement prérempli,
+        mais le rappel y suit alors vos réglages par défaut.
       </p>
     </section>
 
@@ -195,22 +202,22 @@
         <div class="acc__body">
           <p><strong>Zakāt</strong> : l'aumône purificatrice obligatoire,
           troisième pilier de l'Islam, fixée à 2,5 % de la richesse zakatable.</p>
-          <p><strong>Nissāb</strong> : le seuil de richesse à partir duquel la
+          <p><strong>Nisāb</strong> : le seuil de richesse à partir duquel la
           Zakāt devient obligatoire. Il vaut la valeur de 85 g d'or ou de 595 g
           d'argent.</p>
           <p><strong>Hawl</strong> : l'écoulement d'une année lunaire complète de
           possession. La Zakāt est due au terme du hawl si l'on possède alors le
-          nissāb.</p>
+          nisāb.</p>
         </div>
       </details>
 
       <details class="acc">
-        <summary>Comment le nissāb est calculé ici</summary>
+        <summary>Comment le nisāb est calculé ici</summary>
         <div class="acc__body">
           <p>Les cours de l'or (XAU) et de l'argent (XAG) en euros proviennent de
           GoldAPI.io, relevés une fois par jour à la dernière clôture. L'once troy
           vaut 31,1034768 g.</p>
-          <p>On en déduit le prix au gramme, puis le nissāb : 85 g pour l'or, 595 g
+          <p>On en déduit le prix au gramme, puis le nisāb : 85 g pour l'or, 595 g
           pour l'argent. Exemple : nisāb de l'or = (prix de l'once ÷ 31,1034768)
           × 85.</p>
         </div>
@@ -219,24 +226,24 @@
       <details class="acc">
         <summary>Or ou argent : quel seuil retenir</summary>
         <div class="acc__body">
-          <p>Le nissāb de l'or et celui de l'argent ne donnent pas le même montant.
+          <p>Le nisāb de l'or et celui de l'argent ne donnent pas le même montant.
           Pour la monnaie, les savants divergent sur le seuil à appliquer, et le
-          calculateur vous laisse le choix. Suivant l'avis des savants
-          maghrébins, c'est le seuil de l'argent, plus bas, qui est retenu&nbsp;:</p>
+          calculateur vous laisse le choix. Par défaut, suivant l'avis des savants
+          marocains, c'est le seuil de l'argent, plus bas, qui est retenu&nbsp;:</p>
           <ul>
-            <li>le nissāb de l'argent est fixé par des hadiths authentiques, alors
+            <li>le nisāb de l'argent est fixé par des hadiths authentiques, alors
             qu'aucun hadith ferme n'établit directement celui de l'or&nbsp;;</li>
-            <li>le nissāb de l'or n'est connu que par analogie (qiyās) sur celui de
+            <li>le nisāb de l'or n'est connu que par analogie (qiyās) sur celui de
             l'argent&nbsp;;</li>
-            <li>le nissāb de l'argent fait l'objet d'un consensus, contrairement à
+            <li>le nisāb de l'argent fait l'objet d'un consensus, contrairement à
             celui de l'or&nbsp;;</li>
             <li>l'argent est moins fluctuant et le seuil plus bas est dans
             l'intérêt du pauvre.</li>
           </ul>
-          <p>C'est l'avis exposé sur le site
+          <p>C'est l'avis exposé par
           <a href="https://www.doctrine-malikite.fr/La-Zakat_r30.html" target="_blank" rel="noopener">doctrine-malikite.fr</a>
           et par
-          <a href="https://www.youtube.com/watch?v=wPXoP9Cjn_w&list=PLeM-9aIHnzLi6FJBV-XqJqaO_9Kakd-HK" target="_blank" rel="noopener">le Cheikh Tarik Abou Nour dans son séminaire sur la Zakāt al-Māl</a>,
+          <a href="https://www.youtube.com/watch?v=wPXoP9Cjn_w&list=PLeM-9aIHnzLi6FJBV-XqJqaO_9Kakd-HK" target="_blank" rel="noopener">le séminaire du Cheikh Tarik Abou Nour sur la Zakāt</a>,
           qui laisse aussi le choix entre les deux seuils.</p>
         </div>
       </details>
@@ -246,14 +253,14 @@
         <div class="acc__body">
           <p>Dans l'école malikite, l'or, l'argent et la monnaie ne s'examinent
           pas isolément : ils se cumulent par parts pour compléter ensemble un
-          nissāb.</p>
-          <p>Chaque avoir est exprimé en fraction de son nissāb : l'or physique
-          contre le nissāb de l'or (sa valeur ÷ valeur de 85 g d'or), l'argent
-          physique contre le nissāb de l'argent, et la monnaie contre le nissāb que
+          nisāb.</p>
+          <p>Chaque avoir est exprimé en fraction de son nisāb : l'or physique
+          contre le nisāb de l'or (sa valeur ÷ valeur de 85 g d'or), l'argent
+          physique contre le nisāb de l'argent, et la monnaie contre le nisāb que
           vous avez choisi (argent par défaut, ou or). On additionne ces
-          fractions&nbsp;; si le total atteint un nissāb entier, la Zakāt est due,
+          fractions&nbsp;; si le total atteint un nisāb entier, la Zakāt est due,
           à 2,5 % de la valeur totale nette.</p>
-          <p>Ainsi, 50 g d'or détenus seuls (soit 0,59 du nissāb d'or) ne déclenchent
+          <p>Ainsi, 50 g d'or détenus seuls (soit 0,59 nisāb d'or) ne déclenchent
           pas la Zakāt, tandis que des espèces dépassant à elles seules le seuil
           retenu la rendent due.</p>
         </div>
@@ -270,8 +277,8 @@
           réservés à une dot), les chevaux, la résidence, la voiture, les outils,
           équipements et locaux acquis pour l'usage et non pour la vente.</p>
           <p>On calcule après avoir déduit les dettes échues et pourvu aux besoins
-          essentiels. Dans l'école malikite, si l'on possède le niqsāb en début
-          d'année, qu'il baisse en cours d'année puis remonte au nissāb à la fin,
+          essentiels. Dans l'école malikite, si l'on possède le nisāb en début
+          d'année, qu'il baisse en cours d'année puis remonte au nisāb à la fin,
           la Zakāt reste due.</p>
         </div>
       </details>
@@ -280,14 +287,14 @@
         <summary>Zakāt sur les salaires et revenus</summary>
         <div class="acc__body">
           <p>Les salaires sont traités par analogie avec l'or et l'argent : on
-          tient compte du nissāb et du hawl. L'avis retenu accumule les économies
+          tient compte du nisāb et du hawl. L'avis retenu accumule les économies
           nettes mensuelles&nbsp;; le hawl part de la première somme ayant atteint
-          ou dépassé le nissāb.</p>
+          ou dépassé le nisāb.</p>
           <p>La voie la plus simple et la plus généreuse est de s'acquitter de
           2,5 % sur tout ce que l'on possède une année lunaire après cette
           première somme. Une méthode plus minutieuse consiste à relever le solde
           net chaque mois lunaire, puis à retenir le plus petit des douze montants
-          (celui qui a duré toute l'année) et, s'il atteint le nissāb, à en donner
+          (celui qui a duré toute l'année) et, s'il atteint le nisāb, à en donner
           2,5 %.</p>
         </div>
       </details>
