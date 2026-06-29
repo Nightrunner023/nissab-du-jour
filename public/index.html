@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Nissab du Jour — or et argent en euros</title>
+  <meta name="description" content="Le montant du nisâb du jour en or (85 g) et en argent (595 g), en euros, avec les dates hégirienne et grégorienne et un rappel pour le hawl." />
+  <meta name="theme-color" content="#0c151b" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Manrope:wght@400;500;600;700&family=Spline+Sans+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <main class="page">
+    <header class="masthead">
+      <p class="eyebrow">Nisâb · Zakât</p>
+      <h1 class="title">Nissab du Jour</h1>
+      <div class="dates" id="todayDates" aria-live="polite">
+        <span class="date date--greg" id="todayGreg">…</span>
+        <span class="date-sep" aria-hidden="true">·</span>
+        <span class="date date--hijri" id="todayHijri">…</span>
+      </div>
+    </header>
+
+    <section class="metals" id="metals" aria-label="Montant du nisâb">
+      <article class="metal metal--gold" id="card-gold">
+        <div class="metal__sheen" aria-hidden="true"></div>
+        <header class="metal__head">
+          <h2 class="metal__name">Or</h2>
+          <p class="metal__caption">Nisâb · 85 g</p>
+        </header>
+        <p class="metal__amount" id="goldNisab">—</p>
+        <p class="metal__detail" id="goldDetail">&nbsp;</p>
+      </article>
+
+      <article class="metal metal--silver" id="card-silver">
+        <div class="metal__sheen" aria-hidden="true"></div>
+        <header class="metal__head">
+          <h2 class="metal__name">Argent</h2>
+          <p class="metal__caption">Nisâb · 595 g</p>
+        </header>
+        <p class="metal__amount" id="silverNisab">—</p>
+        <p class="metal__detail" id="silverDetail">&nbsp;</p>
+      </article>
+    </section>
+
+    <p class="alert" id="alert" hidden></p>
+
+    <section class="hawl" aria-label="Échéance du hawl">
+      <h2 class="hawl__title">Votre hawl</h2>
+      <p class="hawl__lede">
+        Si vous déteniez aujourd'hui de quoi atteindre le nisâb, votre hawl,
+        l'échéance d'une année lunaire complète, arriverait le&nbsp;:
+      </p>
+      <div class="hawl__dates">
+        <span class="date date--greg" id="hawlGreg">…</span>
+        <span class="date-sep" aria-hidden="true">·</span>
+        <span class="date date--hijri" id="hawlHijri">…</span>
+      </div>
+      <div class="hawl__actions">
+        <a class="btn btn--primary" id="btnIcs" href="#" download="hawl.ics">
+          Apple · Outlook · iCal
+          <span class="btn__sub">.ics, rappel 3 jours avant inclus</span>
+        </a>
+        <a class="btn" id="btnGoogle" href="#" target="_blank" rel="noopener">
+          Google Agenda
+          <span class="btn__sub">évènement prérempli</span>
+        </a>
+      </div>
+      <p class="hawl__note">
+        Le fichier .ics ajoute le rappel trois jours avant l'échéance et
+        fonctionne sur Apple Calendrier, Outlook, et dans Google Agenda après
+        import. Le bouton Google ouvre un évènement prérempli&nbsp;; le rappel y
+        suit alors vos réglages par défaut.
+      </p>
+    </section>
+
+    <footer class="foot">
+      <p class="foot__row" id="updated">Mise à jour…</p>
+      <p class="foot__note">
+        Cours fournis par GoldAPI.io. Le seuil retenu (or ou argent) dépend de
+        l'avis suivi&nbsp;; les deux montants sont donnés à titre indicatif.
+      </p>
+    </footer>
+  </main>
+
+  <script src="/app.js"></script>
+</body>
+</html>
