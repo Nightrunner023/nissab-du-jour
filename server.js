@@ -2,8 +2,9 @@
  * Nissab du Jour — serveur unique (API + site statique)
  *
  * Récupère une fois par jour le prix de l'once troy d'or (XAU) et d'argent (XAG)
- * en euros depuis GoldAPI.io, met le résultat en cache (fichier JSON) et calcule
- * le nisâb de l'or (85 g) et de l'argent (595 g). Le frontend interroge /api/nissab.
+ * en euros depuis GoldAPI.io, met le résultat en cache (fichier JSON), calcule le
+ * nisâb de l'or (85 g) et de l'argent (595 g), et conserve un historique quotidien.
+ * Le frontend interroge /api/nissab et /api/history.
  */
 
 require('dotenv').config();
@@ -16,8 +17,8 @@ const app = express();
 
 const PORT = process.env.PORT || 3000;
 const API_KEY = process.env.GOLDAPI_KEY;
-const PRICE_FIELD = process.env.PRICE_FIELD || 'prev_close_price'; // 'prev_close_price' (clôture) ou 'price' (spot)
-const CRON_EXPR = process.env.CRON || '0 6 * * *'; // tous les jours à 06:00 (heure du serveur)
+const PRICE_FIELD = process.env.PRICE_FIELD || 'prev_close_price'; // 'prev_close_price' ou 'price'
+const CRON_EXPR = process.env.CRON || '0 6 * * *';
 
 const TROY_OUNCE_GRAMS = 31.1034768;
 const NISAB_GOLD_GRAMS = 85;
@@ -25,23 +26,40 @@ const NISAB_SILVER_GRAMS = 595;
 
 const DATA_DIR = path.join(__dirname, 'data');
 const CACHE_FILE = path.join(DATA_DIR, 'cache.json');
+const HISTORY_FILE = path.join(DATA_DIR, 'history.json');
+const MAX_HISTORY = 420; // un peu plus d'une année lunaire
 
-let cache = null;      // dernier résultat calculé
-let inflight = null;   // verrou : une seule requête API à la fois
+let cache = null;
+let history = [];
+let inflight = null;
 
-// --- Cache disque (survit aux redémarrages) ---------------------------------
-function loadCache() {
-  try { cache = JSON.parse(fs.readFileSync(CACHE_FILE, 'utf8')); }
-  catch { cache = null; }
+// --- Persistance ------------------------------------------------------------
+function loadJson(file, fallback) {
+  try { return JSON.parse(fs.readFileSync(file, 'utf8')); }
+  catch { return fallback; }
 }
-function saveCache() {
+function saveJson(file, value) {
   fs.mkdirSync(DATA_DIR, { recursive: true });
-  fs.writeFileSync(CACHE_FILE, JSON.stringify(cache, null, 2));
+  fs.writeFileSync(file, JSON.stringify(value, null, file === HISTORY_FILE ? 0 : 2));
 }
 
-// Clé du jour au format AAAA-MM-JJ (fuseau du serveur)
 function todayKey() {
-  return new Date().toLocaleDateString('en-CA');
+  return new Date().toLocaleDateString('en-CA'); // AAAA-MM-JJ, fuseau du serveur
+}
+
+function recordHistory(c) {
+  const entry = {
+    date: c.dateKey,
+    goldNisab: c.gold.nisab,
+    silverNisab: c.silver.nisab,
+    goldPerGram: c.gold.perGram,
+    silverPerGram: c.silver.perGram,
+  };
+  const i = history.findIndex((h) => h.date === entry.date);
+  if (i >= 0) history[i] = entry; else history.push(entry);
+  history.sort((a, b) => (a.date < b.date ? -1 : 1));
+  if (history.length > MAX_HISTORY) history = history.slice(-MAX_HISTORY);
+  saveJson(HISTORY_FILE, history);
 }
 
 // --- Appel GoldAPI.io -------------------------------------------------------
@@ -58,7 +76,6 @@ async function fetchMetal(metal) {
   return { perOunce, timestamp: data.timestamp };
 }
 
-// Rafraîchit le cache au plus une fois par jour (verrou anti-doublon).
 function refresh(force = false) {
   const key = todayKey();
   if (!force && cache && cache.dateKey === key) return Promise.resolve(cache);
@@ -75,22 +92,13 @@ function refresh(force = false) {
       dateKey: key,
       currency: 'EUR',
       priceField: PRICE_FIELD,
-      gold: {
-        grams: NISAB_GOLD_GRAMS,
-        perOunce: gold.perOunce,
-        perGram: goldPerGram,
-        nisab: goldPerGram * NISAB_GOLD_GRAMS,
-      },
-      silver: {
-        grams: NISAB_SILVER_GRAMS,
-        perOunce: silver.perOunce,
-        perGram: silverPerGram,
-        nisab: silverPerGram * NISAB_SILVER_GRAMS,
-      },
+      gold: { grams: NISAB_GOLD_GRAMS, perOunce: gold.perOunce, perGram: goldPerGram, nisab: goldPerGram * NISAB_GOLD_GRAMS },
+      silver: { grams: NISAB_SILVER_GRAMS, perOunce: silver.perOunce, perGram: silverPerGram, nisab: silverPerGram * NISAB_SILVER_GRAMS },
       sourceTimestamp: gold.timestamp || silver.timestamp || null,
       fetchedAt: new Date().toISOString(),
     };
-    saveCache();
+    saveJson(CACHE_FILE, cache);
+    recordHistory(cache);
     console.log(`[nissab] rafraîchissement OK pour ${key}`);
     return cache;
   })().finally(() => { inflight = null; });
@@ -106,7 +114,7 @@ app.get('/api/nissab', async (_req, res) => {
     if (!cache || cache.dateKey !== todayKey()) {
       try { await refresh(); }
       catch (e) {
-        if (!cache) throw e; // aucune donnée du tout
+        if (!cache) throw e;
         console.error('[nissab] échec du rafraîchissement, on sert le cache existant :', e.message);
       }
     }
@@ -117,11 +125,17 @@ app.get('/api/nissab', async (_req, res) => {
   }
 });
 
+app.get('/api/history', (req, res) => {
+  const days = Math.min(parseInt(req.query.days, 10) || 30, MAX_HISTORY);
+  res.json({ ok: true, currency: 'EUR', points: history.slice(-days) });
+});
+
 app.get('/healthz', (_req, res) => res.type('text').send('ok'));
 
 // --- Démarrage --------------------------------------------------------------
-loadCache();
+cache = loadJson(CACHE_FILE, null);
+history = loadJson(HISTORY_FILE, []);
 cron.schedule(CRON_EXPR, () => refresh(true).catch((e) => console.error('[cron]', e.message)));
-refresh().catch((e) => console.error('[boot]', e.message)); // premier appel si nécessaire (limité à 1/jour)
+refresh().catch((e) => console.error('[boot]', e.message));
 
 app.listen(PORT, () => console.log(`Nissab du Jour : http://localhost:${PORT}`));

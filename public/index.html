@@ -4,8 +4,30 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Nissab du Jour — or et argent en euros</title>
-  <meta name="description" content="Le montant du nisâb du jour en or (85 g) et en argent (595 g), en euros, avec les dates hégirienne et grégorienne et un rappel pour le hawl." />
+  <meta name="description" content="Le montant du nisâb du jour en or (85 g) et en argent (595 g), en euros, avec les dates hégirienne et grégorienne, un calculateur de Zakât (école mālikī) et un rappel pour le hawl." />
   <meta name="theme-color" content="#0c151b" />
+
+  <!-- Partage (Open Graph / Twitter) -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Nissab du Jour" />
+  <meta property="og:locale" content="fr_FR" />
+  <meta property="og:url" content="https://nissabdujour.fr/" />
+  <meta property="og:title" content="Nissab du Jour — or et argent en euros" />
+  <meta property="og:description" content="Le nisâb du jour en or et en argent, un calculateur de Zakât mālikī et un rappel pour le hawl." />
+  <meta property="og:image" content="https://nissabdujour.fr/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Nissab du Jour" />
+  <meta name="twitter:description" content="Le nisâb du jour en or et en argent, un calculateur de Zakât mālikī et un rappel pour le hawl." />
+  <meta name="twitter:image" content="https://nissabdujour.fr/og-image.png" />
+
+  <!-- Icônes / PWA -->
+  <link rel="manifest" href="/manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
+
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Manrope:wght@400;500;600;700&family=Spline+Sans+Mono:wght@400;500&display=swap" rel="stylesheet" />
@@ -23,8 +45,8 @@
       </div>
     </header>
 
-    <section class="metals" id="metals" aria-label="Montant du nisâb">
-      <article class="metal metal--gold" id="card-gold">
+    <section class="metals" aria-label="Montant du nisâb">
+      <article class="metal metal--gold is-loading" id="card-gold">
         <div class="metal__sheen" aria-hidden="true"></div>
         <header class="metal__head">
           <h2 class="metal__name">Or</h2>
@@ -34,7 +56,7 @@
         <p class="metal__detail" id="goldDetail">&nbsp;</p>
       </article>
 
-      <article class="metal metal--silver" id="card-silver">
+      <article class="metal metal--silver is-loading" id="card-silver">
         <div class="metal__sheen" aria-hidden="true"></div>
         <header class="metal__head">
           <h2 class="metal__name">Argent</h2>
@@ -47,8 +69,91 @@
 
     <p class="alert" id="alert" hidden></p>
 
+    <p class="threshold-note">
+      Le nisâb est le seuil de richesse à partir duquel la Zakât devient due.
+      L'école mālikī privilégie le seuil de l'<strong>argent</strong>, plus bas,
+      donc plus favorable aux pauvres.
+      <a href="#methodo">En savoir plus</a>
+    </p>
+
+    <!-- Calculateur -->
+    <section class="calc" id="calc" aria-label="Calculateur de Zakât">
+      <h2 class="section-title">Calculer ma Zakât</h2>
+      <p class="section-lede">
+        Estimation selon l'école mālikī, seuil de l'argent retenu. À renseigner
+        une fois l'année lunaire (hawl) écoulée sur vos biens.
+      </p>
+
+      <div class="calc__grid">
+        <label class="field">
+          <span class="field__label">Espèces et épargne</span>
+          <span class="field__hint">comptes, livrets, liquidités</span>
+          <span class="field__input">
+            <input type="number" id="cEspeces" inputmode="decimal" min="0" step="any" placeholder="0" />
+            <span class="field__unit">€</span>
+          </span>
+        </label>
+
+        <label class="field">
+          <span class="field__label">Or de placement</span>
+          <span class="field__hint">lingots, pièces · hors bijoux personnels</span>
+          <span class="field__input">
+            <input type="number" id="cOrG" inputmode="decimal" min="0" step="any" placeholder="0" />
+            <span class="field__unit">g</span>
+          </span>
+        </label>
+
+        <label class="field">
+          <span class="field__label">Argent de placement</span>
+          <span class="field__hint">lingots, pièces · hors usage personnel</span>
+          <span class="field__input">
+            <input type="number" id="cArgentG" inputmode="decimal" min="0" step="any" placeholder="0" />
+            <span class="field__unit">g</span>
+          </span>
+        </label>
+
+        <label class="field">
+          <span class="field__label">Marchandises à vendre</span>
+          <span class="field__hint">stock destiné au commerce, valeur marchande</span>
+          <span class="field__input">
+            <input type="number" id="cCommerce" inputmode="decimal" min="0" step="any" placeholder="0" />
+            <span class="field__unit">€</span>
+          </span>
+        </label>
+
+        <label class="field">
+          <span class="field__label">Dettes échues à déduire</span>
+          <span class="field__hint">sommes que vous devez régler maintenant</span>
+          <span class="field__input">
+            <input type="number" id="cDettes" inputmode="decimal" min="0" step="any" placeholder="0" />
+            <span class="field__unit">€</span>
+          </span>
+        </label>
+      </div>
+
+      <div class="calc__result" id="calcResult" aria-live="polite">
+        <p class="calc__hint">Renseignez vos montants pour voir l'estimation.</p>
+      </div>
+
+      <p class="calc__note">
+        Sont exclus, selon l'école mālikī : les bijoux d'usage personnel, la
+        résidence, la voiture, les outils de travail. La Zakât suppose la
+        possession du nisâb au terme d'une année lunaire. Pour les salaires, les
+        créances ou une activité commerciale, voyez la méthode détaillée plus bas
+        et consultez un savant pour votre cas.
+      </p>
+    </section>
+
+    <!-- Historique -->
+    <section class="history" id="history" aria-label="Historique du nisâb">
+      <h2 class="section-title">Évolution du nisâb</h2>
+      <p class="section-lede" id="histLede">Sur les derniers jours.</p>
+      <div class="chart" id="chart"></div>
+    </section>
+
+    <!-- Hawl -->
     <section class="hawl" aria-label="Échéance du hawl">
-      <h2 class="hawl__title">Votre hawl</h2>
+      <h2 class="section-title">Votre hawl</h2>
       <p class="hawl__lede">
         Si vous déteniez aujourd'hui de quoi atteindre le nisâb, votre hawl,
         l'échéance d'une année lunaire complète, arriverait le&nbsp;:
@@ -60,8 +165,8 @@
       </div>
       <div class="hawl__actions">
         <a class="btn btn--primary" id="btnIcs" href="#" download="hawl.ics">
-          Apple · Outlook · iCal
-          <span class="btn__sub">.ics, rappel 3 jours avant inclus</span>
+          Ajouter à mon agenda
+          <span class="btn__sub">.ics · rappel 3 jours avant inclus</span>
         </a>
         <a class="btn" id="btnGoogle" href="#" target="_blank" rel="noopener">
           Google Agenda
@@ -69,18 +174,121 @@
         </a>
       </div>
       <p class="hawl__note">
-        Le fichier .ics ajoute le rappel trois jours avant l'échéance et
-        fonctionne sur Apple Calendrier, Outlook, et dans Google Agenda après
-        import. Le bouton Google ouvre un évènement prérempli&nbsp;; le rappel y
-        suit alors vos réglages par défaut.
+        Sur téléphone, préférez le bouton « Ajouter à mon agenda » (.ics)&nbsp;:
+        le rappel trois jours avant y est garanti, sur Apple Calendrier, Outlook
+        comme dans Google Agenda. Le bouton Google ouvre un évènement prérempli,
+        mais le rappel y suit alors vos réglages par défaut.
+      </p>
+    </section>
+
+    <!-- Méthodologie et vocabulaire -->
+    <section class="methodo" id="methodo" aria-label="Méthodologie et vocabulaire">
+      <h2 class="section-title">Comprendre et vérifier</h2>
+
+      <details class="acc" open>
+        <summary>Le vocabulaire</summary>
+        <div class="acc__body">
+          <p><strong>Nisâb</strong> : le seuil de richesse à partir duquel la
+          Zakât devient obligatoire. Il vaut la valeur de 85 g d'or ou de 595 g
+          d'argent.</p>
+          <p><strong>Hawl</strong> : l'écoulement d'une année lunaire complète de
+          possession. La Zakât est due au terme du hawl si l'on possède alors le
+          nisâb.</p>
+          <p><strong>Zakât</strong> : l'aumône purificatrice obligatoire,
+          troisième pilier de l'Islam, fixée à 2,5 % de la richesse imposable.</p>
+        </div>
+      </details>
+
+      <details class="acc">
+        <summary>Comment le nisâb est calculé ici</summary>
+        <div class="acc__body">
+          <p>Les cours de l'or (XAU) et de l'argent (XAG) en euros proviennent de
+          GoldAPI.io, relevés une fois par jour à la dernière clôture. L'once troy
+          vaut 31,1034768 g.</p>
+          <p>On en déduit le prix au gramme, puis le nisâb : 85 g pour l'or, 595 g
+          pour l'argent. Exemple : nisâb de l'or = (prix de l'once ÷ 31,1034768)
+          × 85.</p>
+        </div>
+      </details>
+
+      <details class="acc">
+        <summary>Pourquoi le seuil de l'argent</summary>
+        <div class="acc__body">
+          <p>Le nisâb de l'or et celui de l'argent ne donnent pas le même montant.
+          L'école mālikī, suivant l'avis des savants marocains, privilégie le
+          seuil de l'argent, qui est plus bas. Plusieurs raisons sont avancées :</p>
+          <ul>
+            <li>le nisâb de l'argent est fixé par des hadiths authentiques, alors
+            qu'aucun hadith ferme n'établit directement celui de l'or&nbsp;;</li>
+            <li>le nisâb de l'or n'est connu que par analogie (qiyās) sur celui de
+            l'argent&nbsp;;</li>
+            <li>le nisâb de l'argent fait l'objet d'un consensus, contrairement à
+            celui de l'or&nbsp;;</li>
+            <li>l'argent est moins fluctuant et le seuil plus bas est dans
+            l'intérêt du pauvre.</li>
+          </ul>
+          <p>C'est l'avis exposé par doctrine-malikite.fr et par le séminaire du
+          Cheikh Tarik Abou Nour sur la Zakât.</p>
+        </div>
+      </details>
+
+      <details class="acc">
+        <summary>Ce qui entre dans le calcul (école mālikī)</summary>
+        <div class="acc__body">
+          <p><strong>Soumis à la Zakât</strong> : l'argent (espèces, comptes,
+          épargne), l'or et l'argent détenus comme richesse, et les marchandises
+          destinées à la vente. Le taux est de 2,5 % après écoulement du hawl.</p>
+          <p><strong>Non soumis</strong> : les bijoux d'usage personnel de la
+          femme (sauf destinés au commerce, ou thésaurisés pour les revendre, ou
+          réservés à une dot), les chevaux, la résidence, la voiture, les outils,
+          équipements et locaux acquis pour l'usage et non pour la vente.</p>
+          <p>On calcule après avoir déduit les dettes échues et pourvu aux besoins
+          essentiels. Dans l'école mālikī, si l'on possède le nisâb en début
+          d'année, qu'il baisse en cours d'année puis remonte au nisâb à la fin,
+          la Zakât reste due.</p>
+        </div>
+      </details>
+
+      <details class="acc">
+        <summary>Zakât sur les salaires et revenus</summary>
+        <div class="acc__body">
+          <p>Les salaires sont traités par analogie avec l'or et l'argent : on
+          tient compte du nisâb et du hawl. L'avis retenu accumule les économies
+          nettes mensuelles&nbsp;; le hawl part de la première somme ayant atteint
+          ou dépassé le nisâb.</p>
+          <p>La voie la plus simple et la plus généreuse est de s'acquitter de
+          2,5 % sur tout ce que l'on possède une année lunaire après cette
+          première somme. Une méthode plus minutieuse consiste à relever le solde
+          net chaque mois lunaire, puis à retenir le plus petit des douze montants
+          (celui qui a duré toute l'année) et, s'il atteint le nisâb, à en donner
+          2,5 %.</p>
+        </div>
+      </details>
+
+      <details class="acc">
+        <summary>À qui donner la Zakât</summary>
+        <div class="acc__body">
+          <p>Le Coran fixe huit catégories (sourate 9, verset 60) : les pauvres,
+          les nécessiteux, les agents de collecte, les cœurs à rallier, le rachat
+          des captifs, les endettés, la cause de Dieu et le voyageur de passage.
+          Elle va en priorité aux proches dans le besoin, mais pas aux personnes
+          que l'on a la charge légale d'entretenir.</p>
+        </div>
+      </details>
+
+      <p class="disclaimer">
+        Cet outil donne une estimation indicative et ne remplace pas l'avis d'un
+        savant. Pour votre situation propre (dettes, créances, commerce, salaires,
+        biens mixtes), consultez une personne de science ou le centre islamique
+        le plus proche. Et Allah sait mieux.
       </p>
     </section>
 
     <footer class="foot">
       <p class="foot__row" id="updated">Mise à jour…</p>
       <p class="foot__note">
-        Cours fournis par GoldAPI.io. Le seuil retenu (or ou argent) dépend de
-        l'avis suivi&nbsp;; les deux montants sont donnés à titre indicatif.
+        Cours fournis par GoldAPI.io. Repères de fiqh d'après doctrine-malikite.fr
+        et le séminaire du Cheikh Tarik Abou Nour.
       </p>
     </footer>
   </main>
