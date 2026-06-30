@@ -505,3 +505,6 @@ body {
 .hawl__dates .date-sep { display: none; }
 .hawl__actions { justify-content: center; }
 .hawl__actions .btn { text-align: center; align-items: center; }
+
+/* bouton d'agenda unique : centré, largeur mesurée (ne s'étire pas) */
+.hawl__actions .btn { flex: 0 0 auto; min-width: 260px; }

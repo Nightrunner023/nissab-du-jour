@@ -1,6 +1,6 @@
 # Remplacez nissab.exemple.com par votre nom de domaine.
 # Caddy obtient et renouvelle le certificat HTTPS tout seul.
-nissabdujour.fr, www.nissabdujour.fr {
+nissab.exemple.com {
     encode gzip zstd
     reverse_proxy 127.0.0.1:3000
 }

@@ -71,24 +71,16 @@ function eventDetails(hawl, data) {
   const today = todayAnchor();
   let s =
     'Une année lunaire complète s\'est écoulée. ' +
-    'Vérifiez si vous atteignez toujours le nisāb et calculez votre Zakāt.\n\n';
+    'Vérifiez si vous atteignez toujours le nissāb et calculez votre Zakāt.\n\n';
   if (data) {
     s +=
-      `Nisāb de référence (relevé le ${formatGreg(today)} / ${formatHijri(today)}) :\n` +
+      `Nissāb de référence (relevé le ${formatGreg(today)} / ${formatHijri(today)}) :\n` +
       `• Or (85 g) : ${eur.format(data.gold.nisab)}\n` +
       `• Argent (595 g) : ${eur.format(data.silver.nisab)}\n\n`;
   }
   s += `Hawl : ${formatGreg(hawl)} (${formatHijri(hawl)}).\n`;
   s += 'Rappel généré par Nissab du Jour.';
   return s;
-}
-function googleUrl(hawl, data) {
-  const start = ymdBasic(hawl);
-  const end = ymdBasic(addDays(hawl, 1));
-  const params = new URLSearchParams({
-    action: 'TEMPLATE', text: EVENT_TITLE, dates: `${start}/${end}`, details: eventDetails(hawl, data),
-  });
-  return `https://calendar.google.com/calendar/render?${params.toString()}`;
 }
 function icsContent(hawl, data) {
   const start = ymdBasic(hawl);
@@ -100,7 +92,7 @@ function icsContent(hawl, data) {
     'BEGIN:VEVENT', `UID:hawl-${start}@nissab-du-jour`, `DTSTAMP:${stamp}`,
     `DTSTART;VALUE=DATE:${start}`, `DTEND;VALUE=DATE:${end}`,
     `SUMMARY:${esc(EVENT_TITLE)}`, `DESCRIPTION:${esc(eventDetails(hawl, data))}`,
-    'BEGIN:VALARM', 'ACTION:DISPLAY', 'DESCRIPTION:Hawl dans 3 jours — préparez votre Zakāt', 'TRIGGER:-P3D', 'END:VALARM',
+    'BEGIN:VALARM', 'ACTION:DISPLAY', `DESCRIPTION:${esc(EVENT_TITLE)}`, 'TRIGGER:-P3D', 'END:VALARM',
     'END:VEVENT', 'END:VCALENDAR',
   ].join('\r\n');
 }
@@ -108,7 +100,6 @@ function icsContent(hawl, data) {
 let HAWL = null;
 let icsObjectUrl = null;
 function buildCalendar(hawl, data) {
-  document.getElementById('btnGoogle').href = googleUrl(hawl, data);
   if (icsObjectUrl) URL.revokeObjectURL(icsObjectUrl);
   const blob = new Blob([icsContent(hawl, data)], { type: 'text/calendar;charset=utf-8' });
   icsObjectUrl = URL.createObjectURL(blob);
@@ -126,7 +117,7 @@ function renderDates() {
   buildCalendar(HAWL, null);
 }
 
-// Nisāb du jour
+// Nissāb du jour
 function renderNisab(data) {
   NISAB_DATA = data;
   document.getElementById('goldNisab').textContent = eur.format(data.gold.nisab);
@@ -196,9 +187,9 @@ function computeZakat() {
   const seuilMonnaie = basis === 'or' ? goldNisab : silverNisab;
   const libelleSeuil = basis === 'or' ? 'Or · 85 g' : 'Argent · 595 g';
 
-  // Cumul par parts (ḍamm) : chaque avoir compté en fraction de son nisāb.
-  // L'or physique contre le nisāb de l'or, l'argent physique contre celui de
-  // l'argent, la monnaie contre le nisāb choisi.
+  // Cumul par parts (ḍamm) : chaque avoir compté en fraction de son nissāb.
+  // L'or physique contre le nissāb de l'or, l'argent physique contre celui de
+  // l'argent, la monnaie contre le nissāb choisi.
   const fraction =
     valeurOr / goldNisab +
     valeurArgent / silverNisab +
@@ -210,15 +201,15 @@ function computeZakat() {
   let html = '';
   html += `<div class="calc__line"><span>Total zakatable</span><strong>${eur.format(Math.max(0, totalNet))}</strong></div>`;
   html += `<div class="calc__line"><span>Seuil pour la monnaie</span><strong>${libelleSeuil} · ${eur.format(seuilMonnaie)}</strong></div>`;
-  html += `<div class="calc__line"><span>Équivalent cumulé</span><span>${fraction.toFixed(2).replace('.', ',')} × nisāb</span></div>`;
+  html += `<div class="calc__line"><span>Équivalent cumulé</span><span>${fraction.toFixed(2).replace('.', ',')} × nissāb</span></div>`;
 
   if (atteint) {
     const zakat = totalNet * 0.025;
-    html += '<p class="calc__verdict">Vous atteignez le nisāb. Zakāt due, soit 2,5 % :</p>';
+    html += '<p class="calc__verdict">Vous atteignez le nissāb. Zakāt due, soit 2,5 % :</p>';
     html += `<p class="calc__zakat">${eur.format(zakat)}</p>`;
     result.className = 'calc__result is-above';
   } else {
-    html += '<p class="calc__verdict">En dessous du nisāb : pas de Zakāt due aujourd\'hui, sous réserve des conditions du hawl.</p>';
+    html += '<p class="calc__verdict">En dessous du nissāb : pas de Zakāt due aujourd\'hui, sous réserve des conditions du hawl.</p>';
     result.className = 'calc__result is-below';
   }
   result.innerHTML = html;
@@ -245,7 +236,7 @@ function metalPanel(title, values, points, lineClass, dotClass, showDates) {
   const x = (i) => padL + (points.length === 1 ? innerW / 2 : (i / (points.length - 1)) * innerW);
   const y = (v) => padT + innerH - ((v - min) / (max - min)) * innerH;
 
-  let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Évolution du nisāb ${title}">`;
+  let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Évolution du nissāb ${title}">`;
   s += `<text class="chart-title" x="0" y="15">${title}</text>`;
 
   for (let t = 0; t <= 3; t++) {

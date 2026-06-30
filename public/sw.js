@@ -1,6 +1,6 @@
 /* Service worker — Nissab du Jour
    Augmentez la version du cache à chaque mise à jour des fichiers. */
-const CACHE = 'nissab-v3';
+const CACHE = 'nissab-v6';
 const ASSETS = [
   '/',
   '/style.css',
